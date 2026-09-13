@@ -49,8 +49,7 @@ namespace FMAI.Survival.Bootstrap
                 Collider collider = loot.GetComponent<Collider>();
                 collider.isTrigger = true;
                 Pickup pickup = loot.AddComponent<Pickup>();
-                var field = typeof(Pickup).GetField("itemId", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-                field?.SetValue(pickup, LootIds[i % LootIds.Length]);
+                pickup.SetItemId(LootIds[i % LootIds.Length]);
             }
         }
 
