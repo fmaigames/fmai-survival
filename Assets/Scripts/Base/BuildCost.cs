@@ -16,10 +16,7 @@ namespace FMAI.Survival.Base
         private static int ItemCount(InventorySystem inventory, string itemId)
         {
             if (inventory == null || string.IsNullOrWhiteSpace(itemId)) return 0;
-            int count = 0;
-            foreach (var item in inventory.Items)
-                if (item == itemId) count++;
-            return count;
+            return inventory.CountItem(itemId);
         }
 
         public static bool CanPay(InventorySystem inventory, IEnumerable<BuildCost> costs)
