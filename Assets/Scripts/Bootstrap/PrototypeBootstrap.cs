@@ -57,6 +57,9 @@ namespace FMAI.Survival.Bootstrap
 
             PrototypeFollowCamera follow = cameraObject.AddComponent<PrototypeFollowCamera>();
             follow.SetTarget(player.transform);
+
+            PlayerController controller = player.GetComponent<PlayerController>();
+            controller.InitializeCamera(cameraObject.transform);
         }
 
         private void CreateLight()
