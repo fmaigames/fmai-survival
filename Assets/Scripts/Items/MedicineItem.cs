@@ -14,7 +14,7 @@ namespace FMAI.Survival.Items
             if (player == null || inventory == null || !inventory.Has(itemId)) return false;
             if (!inventory.Remove(itemId)) return false;
 
-            player.Heal(healAmount);
+            player.RestoreHealth(healAmount);
             return true;
         }
     }
