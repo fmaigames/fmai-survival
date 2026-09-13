@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 using FMAI.Survival.Inventory;
 
@@ -34,7 +33,14 @@ namespace FMAI.Survival.Wildlife
                 _ => 1
             };
 
-            if (!inventory.Add(meatId)) return false;
+            int extraDrops = (animal == WildlifeType.Deer || animal == WildlifeType.Boar || animal == WildlifeType.Bear ||
+                              animal == WildlifeType.Wolf || animal == WildlifeType.Fox) ? 1 : 0;
+
+            if (inventory.Count + meat + extraDrops > 24) return false;
+
+            for (int i = 0; i < meat; i++)
+                inventory.Add(meatId);
+
             if (animal == WildlifeType.Deer || animal == WildlifeType.Boar || animal == WildlifeType.Bear)
                 inventory.Add("item.hide");
             if (animal == WildlifeType.Wolf || animal == WildlifeType.Fox)
