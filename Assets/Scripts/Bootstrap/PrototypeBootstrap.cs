@@ -1,7 +1,6 @@
 using UnityEngine;
 using FMAI.Survival.Player;
 using FMAI.Survival.Inventory;
-using FMAI.Survival.CameraSystem;
 
 namespace FMAI.Survival.Bootstrap
 {
@@ -18,6 +17,7 @@ namespace FMAI.Survival.Bootstrap
             CreatePlayer();
             CreateCamera();
             CreateLight();
+            AddRuntimeSystems();
         }
 
         private void CreateEnvironment()
@@ -68,6 +68,12 @@ namespace FMAI.Survival.Bootstrap
             Light light = lightObject.AddComponent<Light>();
             light.type = LightType.Directional;
             light.transform.rotation = Quaternion.Euler(50f, -30f, 0f);
+        }
+
+        private void AddRuntimeSystems()
+        {
+            gameObject.AddComponent<PrototypeSpawner>();
+            player.AddComponent<PrototypeCombatSpawner>();
         }
     }
 }
