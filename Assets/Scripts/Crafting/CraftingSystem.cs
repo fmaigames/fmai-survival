@@ -6,6 +6,9 @@ namespace FMAI.Survival.Crafting
     public class CraftingSystem : MonoBehaviour
     {
         [SerializeField] private InventorySystem inventory;
+        [SerializeField] private string woodItemId = "item.wood";
+        [SerializeField] private int woodRequired = 3;
+        [SerializeField] private string shelterKitId = "item.shelter_kit";
 
         public bool CraftBandage()
         {
@@ -21,6 +24,17 @@ namespace FMAI.Survival.Crafting
             if (inventory == null || !inventory.Has("item.raw_food")) return false;
             inventory.Remove("item.raw_food");
             return inventory.Add("food.cooked");
+        }
+
+        public bool CraftShelterKit()
+        {
+            if (inventory == null || inventory.CountItem(woodItemId) < woodRequired)
+                return false;
+
+            for (int i = 0; i < woodRequired; i++)
+                inventory.Remove(woodItemId);
+
+            return inventory.Add(shelterKitId);
         }
     }
 }
