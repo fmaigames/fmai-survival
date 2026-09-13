@@ -7,6 +7,12 @@ namespace FMAI.Survival.World
     {
         [SerializeField] private string itemId = "food.basic";
 
+        public void SetItemId(string value)
+        {
+            if (!string.IsNullOrWhiteSpace(value))
+                itemId = value;
+        }
+
         private void OnTriggerEnter(Collider other)
         {
             var inventory = other.GetComponentInParent<InventorySystem>();
