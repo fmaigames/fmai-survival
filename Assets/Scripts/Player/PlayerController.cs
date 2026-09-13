@@ -13,6 +13,11 @@ namespace FMAI.Survival.Player
         private CharacterController controller;
         private Vector3 verticalVelocity;
 
+        public void InitializeCamera(Transform cameraTarget)
+        {
+            cameraTransform = cameraTarget;
+        }
+
         private void Awake()
         {
             controller = GetComponent<CharacterController>();
@@ -22,8 +27,6 @@ namespace FMAI.Survival.Player
 
         private void Update()
         {
-            // Input axes are intentionally kept generic so a mobile joystick package
-            // can be connected later without coupling the core controller to a vendor asset.
             Vector2 input = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
             input = Vector2.ClampMagnitude(input, 1f);
 
