@@ -14,7 +14,7 @@ namespace FMAI.Survival.Crafting
 
         public bool CraftFirstAidKit()
         {
-            return Craft("item.bandage", 2, "item.medicine.alcohol", 1, "medicine.first_aid_kit");
+            return Craft("medicine.bandage", 2, "item.medicine.alcohol", 1, "medicine.first_aid_kit");
         }
 
         public bool CraftHerbalTonic()
