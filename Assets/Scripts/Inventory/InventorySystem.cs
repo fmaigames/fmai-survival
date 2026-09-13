@@ -22,5 +22,12 @@ namespace FMAI.Survival.Inventory
         public bool Remove(string itemId) => items.Remove(itemId);
         public bool Has(string itemId) => items.Contains(itemId);
         public int Count => items.Count;
+        public int CountItem(string itemId)
+        {
+            int count = 0;
+            foreach (string item in items)
+                if (item == itemId) count++;
+            return count;
+        }
     }
 }
