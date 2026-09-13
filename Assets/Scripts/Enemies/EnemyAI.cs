@@ -5,15 +5,20 @@ namespace FMAI.Survival.Enemies
 {
     public class EnemyAI : MonoBehaviour
     {
+        [SerializeField] private float maxHealth = 60f;
         [SerializeField] private float detectionRange = 12f;
         [SerializeField] private float attackRange = 2f;
         [SerializeField] private float damage = 10f;
         [SerializeField] private float attackCooldown = 1.25f;
+        private float health;
         private float nextAttackTime;
         private Transform target;
 
+        private void Awake() => health = maxHealth;
+
         private void Update()
         {
+            if (health <= 0f) return;
             if (target == null)
             {
                 var player = FindFirstObjectByType<PlayerStats>();
@@ -35,6 +40,12 @@ namespace FMAI.Survival.Enemies
                 if (stats != null) stats.TakeDamage(damage);
                 nextAttackTime = Time.time + attackCooldown;
             }
+        }
+
+        public void TakeDamage(float amount)
+        {
+            health = Mathf.Max(0f, health - amount);
+            if (health <= 0f) Destroy(gameObject);
         }
     }
 }
