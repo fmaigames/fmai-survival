@@ -13,12 +13,21 @@ namespace FMAI.Survival.Base
 
     public static class BuildCostUtility
     {
+        private static int ItemCount(InventorySystem inventory, string itemId)
+        {
+            if (inventory == null || string.IsNullOrWhiteSpace(itemId)) return 0;
+            int count = 0;
+            foreach (var item in inventory.Items)
+                if (item == itemId) count++;
+            return count;
+        }
+
         public static bool CanPay(InventorySystem inventory, IEnumerable<BuildCost> costs)
         {
             if (inventory == null || costs == null) return false;
             foreach (var cost in costs)
             {
-                if (cost == null || cost.amount < 0 || inventory.Count(cost.itemId) < cost.amount)
+                if (cost == null || cost.amount < 0 || ItemCount(inventory, cost.itemId) < cost.amount)
                     return false;
             }
             return true;
