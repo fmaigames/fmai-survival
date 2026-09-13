@@ -1,17 +1,17 @@
 using UnityEngine;
 
-namespace FMAI.Survival.Player
+namespace FMAI.Survival
 {
     public class PlayerStats : MonoBehaviour
     {
         [SerializeField] private float maxHealth = 100f;
         [SerializeField] private float maxHunger = 100f;
-        [SerializeField] private float hungerDrainPerMinute = 2f;
+        [SerializeField] private float hungerDecayPerSecond = 0.5f;
+        [SerializeField] private float starvationDamagePerSecond = 2f;
 
         public float Health { get; private set; }
         public float Hunger { get; private set; }
-        public float MaxHealth => maxHealth;
-        public float MaxHunger => maxHunger;
+        public bool IsDead => Health <= 0f;
 
         private void Awake()
         {
@@ -21,27 +21,27 @@ namespace FMAI.Survival.Player
 
         private void Update()
         {
-            Hunger = Mathf.Max(0f, Hunger - hungerDrainPerMinute / 60f * Time.deltaTime);
-            if (Hunger <= 0f)
-                TakeDamage(2f * Time.deltaTime);
+            if (IsDead) return;
+            Hunger = Mathf.Max(0f, Hunger - hungerDecayPerSecond * Time.deltaTime);
+            if (Hunger <= 0f) ApplyDamage(starvationDamagePerSecond * Time.deltaTime);
         }
 
-        public void Eat(float amount)
+        public void ApplyDamage(float amount)
         {
-            Hunger = Mathf.Clamp(Hunger + amount, 0f, maxHunger);
+            if (amount <= 0f || IsDead) return;
+            Health = Mathf.Max(0f, Health - amount);
+        }
+
+        public void Eat(float hungerRestored)
+        {
+            if (hungerRestored <= 0f || IsDead) return;
+            Hunger = Mathf.Min(maxHunger, Hunger + hungerRestored);
         }
 
         public void RestoreHealth(float amount)
         {
             if (amount <= 0f || IsDead) return;
-            Health = Mathf.Clamp(Health + amount, 0f, maxHealth);
+            Health = Mathf.Min(maxHealth, Health + amount);
         }
-
-        public void TakeDamage(float amount)
-        {
-            Health = Mathf.Clamp(Health - amount, 0f, maxHealth);
-        }
-
-        public bool IsDead => Health <= 0f;
     }
 }
