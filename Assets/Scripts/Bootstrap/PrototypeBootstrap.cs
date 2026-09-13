@@ -1,12 +1,14 @@
 using UnityEngine;
 using FMAI.Survival.Player;
 using FMAI.Survival.Inventory;
+using FMAI.Survival.CameraSystem;
 
 namespace FMAI.Survival.Bootstrap
 {
     public class PrototypeBootstrap : MonoBehaviour
     {
         [SerializeField] private bool buildOnStart = true;
+        private GameObject player;
 
         private void Start()
         {
@@ -32,8 +34,9 @@ namespace FMAI.Survival.Bootstrap
 
         private void CreatePlayer()
         {
-            GameObject player = GameObject.CreatePrimitive(PrimitiveType.Capsule);
+            player = GameObject.CreatePrimitive(PrimitiveType.Capsule);
             player.name = "Player";
+            player.tag = "Player";
             player.transform.position = new Vector3(0f, 1f, 0f);
 
             CharacterController controller = player.AddComponent<CharacterController>();
@@ -42,6 +45,7 @@ namespace FMAI.Survival.Bootstrap
 
             player.AddComponent<PlayerStats>();
             player.AddComponent<InventorySystem>();
+            player.AddComponent<PlayerController>();
         }
 
         private void CreateCamera()
@@ -49,8 +53,10 @@ namespace FMAI.Survival.Bootstrap
             GameObject cameraObject = new GameObject("Main Camera");
             Camera camera = cameraObject.AddComponent<Camera>();
             camera.tag = "MainCamera";
-            camera.transform.position = new Vector3(0f, 6f, -8f);
-            camera.transform.rotation = Quaternion.Euler(25f, 0f, 0f);
+            cameraObject.transform.position = new Vector3(0f, 6f, -8f);
+
+            PrototypeFollowCamera follow = cameraObject.AddComponent<PrototypeFollowCamera>();
+            follow.SetTarget(player.transform);
         }
 
         private void CreateLight()
