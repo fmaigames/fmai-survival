@@ -1,4 +1,4 @@
-using FMAI.Survival.Player;
+using FMAI.Survival.Enemies;
 using UnityEngine;
 
 namespace FMAI.Survival.Combat
@@ -9,24 +9,18 @@ namespace FMAI.Survival.Combat
         [SerializeField] private float range = 20f;
         [SerializeField] private float fireCooldown = 0.35f;
         [SerializeField] private Camera aimCamera;
-
         private float nextFireTime;
 
         public bool TryFire()
         {
-            if (Time.time < nextFireTime || aimCamera == null)
-                return false;
-
+            if (Time.time < nextFireTime || aimCamera == null) return false;
             nextFireTime = Time.time + fireCooldown;
             Ray ray = aimCamera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
-
             if (Physics.Raycast(ray, out RaycastHit hit, range))
             {
-                var stats = hit.collider.GetComponentInParent<PlayerStats>();
-                if (stats != null)
-                    stats.TakeDamage(damage);
+                var enemy = hit.collider.GetComponentInParent<EnemyAI>();
+                if (enemy != null) enemy.TakeDamage(damage);
             }
-
             return true;
         }
     }
