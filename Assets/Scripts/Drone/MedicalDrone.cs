@@ -13,7 +13,7 @@ namespace FMAI.Survival.Drone
         public bool TryHeal()
         {
             if (player == null || Time.time < nextHealTime || player.IsDead) return false;
-            player.Heal(healAmount);
+            player.RestoreHealth(healAmount);
             nextHealTime = Time.time + cooldown;
             return true;
         }
