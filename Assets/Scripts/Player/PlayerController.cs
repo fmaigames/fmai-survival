@@ -9,6 +9,7 @@ namespace FMAI.Survival.Player
         [SerializeField] private float rotationSpeed = 10f;
         [SerializeField] private float gravity = -20f;
         [SerializeField] private Transform cameraTransform;
+        [SerializeField] private MobileInputBridge mobileInput;
 
         private CharacterController controller;
         private Vector3 verticalVelocity;
@@ -23,11 +24,15 @@ namespace FMAI.Survival.Player
             controller = GetComponent<CharacterController>();
             if (cameraTransform == null && Camera.main != null)
                 cameraTransform = Camera.main.transform;
+            if (mobileInput == null)
+                mobileInput = FindFirstObjectByType<MobileInputBridge>();
         }
 
         private void Update()
         {
-            Vector2 input = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
+            Vector2 input = mobileInput != null && mobileInput.Move.sqrMagnitude > 0.0001f
+                ? mobileInput.Move
+                : new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
             input = Vector2.ClampMagnitude(input, 1f);
 
             Vector3 forward = cameraTransform != null ? cameraTransform.forward : Vector3.forward;
