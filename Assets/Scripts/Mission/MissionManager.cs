@@ -33,6 +33,13 @@ namespace FMAI.Survival.Mission
 
         public IReadOnlyList<MissionDefinition> Missions => missions;
 
+        public void AddMission(MissionDefinition mission)
+        {
+            if (mission == null || string.IsNullOrWhiteSpace(mission.id)) return;
+            if (missions.Exists(m => m.id == mission.id)) return;
+            missions.Add(mission);
+        }
+
         public bool Advance(string missionId, string objectiveId, int amount = 1)
         {
             var mission = missions.Find(m => m.id == missionId);
