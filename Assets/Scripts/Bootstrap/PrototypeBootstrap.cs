@@ -45,6 +45,7 @@ namespace FMAI.Survival.Bootstrap
 
             player.AddComponent<PlayerStats>();
             player.AddComponent<InventorySystem>();
+            player.AddComponent<MobileInputBridge>();
             player.AddComponent<PlayerController>();
         }
 
@@ -55,7 +56,7 @@ namespace FMAI.Survival.Bootstrap
             camera.tag = "MainCamera";
             cameraObject.transform.position = new Vector3(0f, 6f, -8f);
 
-            PrototypeFollowCamera follow = cameraObject.AddComponent<PrototypeFollowCamera>();
+            ThirdPersonCamera follow = cameraObject.AddComponent<ThirdPersonCamera>();
             follow.SetTarget(player.transform);
 
             PlayerController controller = player.GetComponent<PlayerController>();
