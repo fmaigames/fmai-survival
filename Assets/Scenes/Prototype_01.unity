@@ -98,7 +98,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1000}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 00000000000000000000000000000000, type: 3}
+  m_Script: {fileID: 11500000, guid: 8cc6c1b4cb644d7b8294a4e35caad889, type: 3}
   m_Name:
   m_EditorClassIdentifier: FMAI.Survival::PrototypeBootstrap
 --- !u!1 &2000
