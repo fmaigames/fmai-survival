@@ -1,6 +1,7 @@
 using UnityEngine;
 using FMAI.Survival.Player;
 using FMAI.Survival.Inventory;
+using FMAI.Survival.Combat;
 
 namespace FMAI.Survival.Bootstrap
 {
@@ -47,6 +48,7 @@ namespace FMAI.Survival.Bootstrap
             player.AddComponent<InventorySystem>();
             player.AddComponent<MobileInputBridge>();
             player.AddComponent<PlayerController>();
+            player.AddComponent<PlayerAttack>();
         }
 
         private void CreateCamera()
