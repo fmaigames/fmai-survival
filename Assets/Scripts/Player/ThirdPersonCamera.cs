@@ -11,6 +11,7 @@ namespace FMAI.Survival.Player
         [SerializeField] private float rotationSpeed = 120f;
         [SerializeField] private float minPitch = -25f;
         [SerializeField] private float maxPitch = 55f;
+        [SerializeField] private MobileInputBridge mobileInput;
 
         private float yaw;
         private float pitch = 15f;
@@ -20,14 +21,22 @@ namespace FMAI.Survival.Player
             target = cameraTarget;
         }
 
+        private void Awake()
+        {
+            if (mobileInput == null)
+                mobileInput = FindFirstObjectByType<MobileInputBridge>();
+        }
+
         private void LateUpdate()
         {
             if (target == null) return;
 
-            float lookX = Input.GetAxis("Mouse X");
-            float lookY = Input.GetAxis("Mouse Y");
-            yaw += lookX * rotationSpeed * Time.deltaTime;
-            pitch = Mathf.Clamp(pitch - lookY * rotationSpeed * Time.deltaTime, minPitch, maxPitch);
+            Vector2 lookInput = mobileInput != null && mobileInput.Look.sqrMagnitude > 0.0001f
+                ? mobileInput.Look
+                : new Vector2(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"));
+
+            yaw += lookInput.x * rotationSpeed * Time.deltaTime;
+            pitch = Mathf.Clamp(pitch - lookInput.y * rotationSpeed * Time.deltaTime, minPitch, maxPitch);
 
             Quaternion rotation = Quaternion.Euler(pitch, yaw, 0f);
             Vector3 desiredPosition = target.position + Vector3.up * height - rotation * Vector3.forward * distance;
