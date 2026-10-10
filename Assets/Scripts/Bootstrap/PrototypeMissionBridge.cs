@@ -1,4 +1,5 @@
 using UnityEngine;
+using FMAI.Survival.Inventory;
 using FMAI.Survival.Mission;
 using FMAI.Survival.Player;
 using FMAI.Survival.World;
@@ -7,21 +8,22 @@ namespace FMAI.Survival.Bootstrap
 {
     public class PrototypeMissionBridge : MonoBehaviour
     {
-        [SerializeField] private float shelterRadius = 4f;
-        [SerializeField] private float helicopterRadius = 3f;
-
         private MissionManager missionManager;
         private ShelterZone shelter;
         private HelicopterInteraction helicopter;
         private HelicopterMission helicopterMission;
         private Transform player;
+        private InventorySystem inventory;
         private bool shelterObjectiveAdvanced;
         private bool extractionAttempted;
+        private bool rewardGranted;
 
         private void Start()
         {
             player = GameObject.FindGameObjectWithTag("Player")?.transform;
             if (player == null) return;
+
+            inventory = player.GetComponent<InventorySystem>();
 
             missionManager = gameObject.AddComponent<MissionManager>();
             missionManager.AddMission(new MissionDefinition
@@ -70,6 +72,13 @@ namespace FMAI.Survival.Bootstrap
                     helicopterMission.Activate();
                     helicopter.SetMissionReady(true);
                 }
+            }
+
+            if (missionManager.IsComplete("mission.signal") && !rewardGranted)
+            {
+                // Retry on later frames if the inventory is temporarily full or unavailable.
+                if (inventory != null && inventory.Add("resource.signal-core"))
+                    rewardGranted = true;
             }
 
             if (!extractionAttempted &&
