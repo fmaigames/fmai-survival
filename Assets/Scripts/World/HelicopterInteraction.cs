@@ -22,9 +22,10 @@ namespace FMAI.Survival.World
                    interactionRadius * interactionRadius;
         }
 
-        public bool TryCompleteExtraction()
+        public bool TryCompleteExtraction(Vector3 playerPosition)
         {
-            if (extracted || !missionReady)
+            // Enforce the same mission and proximity gate at the state-change boundary.
+            if (!CanExtract(playerPosition))
                 return false;
 
             extracted = true;
