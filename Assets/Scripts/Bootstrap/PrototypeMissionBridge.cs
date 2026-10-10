@@ -17,12 +17,14 @@ namespace FMAI.Survival.Bootstrap
         private Transform player;
         private InventorySystem inventory;
         private bool shelterObjectiveAdvanced;
+        private bool extractionRequested;
         private bool extractionAttempted;
         private bool rewardGranted;
 
         private GUIStyle panelStyle;
         private GUIStyle headingStyle;
         private GUIStyle bodyStyle;
+        private GUIStyle buttonStyle;
 
         private void Start()
         {
@@ -86,12 +88,18 @@ namespace FMAI.Survival.Bootstrap
                     rewardGranted = true;
             }
 
-            if (!extractionAttempted &&
-                missionManager.IsComplete(MissionId) &&
-                helicopter.CanExtract(player.position))
+            // Extraction is explicit: entering the helicopter radius alone never teleports the player.
+            if (extractionRequested)
             {
-                if (helicopterMission.TryLaunch(player) && helicopter.TryCompleteExtraction())
+                extractionRequested = false;
+                if (!extractionAttempted &&
+                    missionManager.IsComplete(MissionId) &&
+                    helicopter.CanExtract(player.position) &&
+                    helicopterMission.TryLaunch(player) &&
+                    helicopter.TryCompleteExtraction())
+                {
                     extractionAttempted = true;
+                }
             }
         }
 
@@ -103,7 +111,11 @@ namespace FMAI.Survival.Bootstrap
             float scale = Mathf.Clamp(Screen.width / 390f, 0.8f, 1.25f);
             float margin = 12f * scale;
             float panelWidth = Mathf.Min(Screen.width - margin * 2f, 340f * scale);
-            float panelHeight = 112f * scale;
+            bool canExtract = !extractionAttempted &&
+                              missionManager.IsComplete(MissionId) &&
+                              helicopter != null &&
+                              helicopter.CanExtract(player.position);
+            float panelHeight = (canExtract ? 154f : 112f) * scale;
             Rect panel = new Rect(margin, margin, panelWidth, panelHeight);
 
             GUI.Box(panel, GUIContent.none, panelStyle);
@@ -117,8 +129,8 @@ namespace FMAI.Survival.Bootstrap
             if (extractionAttempted)
                 status = "EXTRACTION COMPLETE";
             else if (missionManager.IsComplete(MissionId))
-                status = helicopter != null && helicopter.CanExtract(player.position)
-                    ? "Helicopter in range — extraction"
+                status = canExtract
+                    ? "Helicopter in range"
                     : "Objective complete — reach helicopter";
             else
                 status = "Objective: Reach the shelter";
@@ -139,6 +151,18 @@ namespace FMAI.Survival.Bootstrap
                 rewardStatus,
                 bodyStyle
             );
+
+            if (canExtract)
+            {
+                Rect buttonRect = new Rect(
+                    panel.x + 12f * scale,
+                    panel.y + 88f * scale,
+                    panel.width - 24f * scale,
+                    32f * scale
+                );
+                if (GUI.Button(buttonRect, "EXTRACT", buttonStyle))
+                    extractionRequested = true;
+            }
         }
 
         private void EnsureGuiStyles()
@@ -163,6 +187,12 @@ namespace FMAI.Survival.Bootstrap
                 fontSize = 13,
                 wordWrap = true,
                 normal = { textColor = Color.white }
+            };
+
+            buttonStyle = new GUIStyle(GUI.skin.button)
+            {
+                fontSize = 14,
+                fontStyle = FontStyle.Bold
             };
         }
 
