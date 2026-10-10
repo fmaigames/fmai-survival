@@ -4,12 +4,17 @@ namespace FMAI.Survival.World
 {
     public class HelicopterMission : MonoBehaviour
     {
-        [SerializeField] private string missionId = "signal-01";
+        [SerializeField] private string missionId = "mission.signal";
         [SerializeField] private Transform destination;
         private bool activated;
 
         public string MissionId => missionId;
         public bool Activated => activated;
+
+        public void SetDestination(Transform target)
+        {
+            destination = target;
+        }
 
         public void Activate()
         {
