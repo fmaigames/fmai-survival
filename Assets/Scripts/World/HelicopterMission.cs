@@ -24,7 +24,19 @@ namespace FMAI.Survival.World
         public bool TryLaunch(Transform player)
         {
             if (!activated || player == null || destination == null) return false;
+
+            // Disable CharacterController during teleport to avoid stale collision state.
+            CharacterController controller = player.GetComponent<CharacterController>();
+            bool controllerWasEnabled = controller != null && controller.enabled;
+
+            if (controller != null)
+                controller.enabled = false;
+
             player.SetPositionAndRotation(destination.position, destination.rotation);
+
+            if (controller != null)
+                controller.enabled = controllerWasEnabled;
+
             activated = false;
             return true;
         }
