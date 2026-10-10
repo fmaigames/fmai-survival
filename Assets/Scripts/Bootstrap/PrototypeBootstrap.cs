@@ -51,12 +51,26 @@ namespace FMAI.Survival.Bootstrap
 
         private void CreateCamera()
         {
-            GameObject cameraObject = new GameObject("Main Camera");
-            Camera camera = cameraObject.AddComponent<Camera>();
-            camera.tag = "MainCamera";
-            cameraObject.transform.position = new Vector3(0f, 6f, -8f);
+            // Reuse the camera already stored in Prototype_01.unity when present.
+            // Creating a second Main Camera can cause duplicate rendering/audio listeners.
+            Camera camera = Camera.main;
+            GameObject cameraObject;
 
-            ThirdPersonCamera follow = cameraObject.AddComponent<ThirdPersonCamera>();
+            if (camera != null)
+            {
+                cameraObject = camera.gameObject;
+            }
+            else
+            {
+                cameraObject = new GameObject("Main Camera");
+                camera = cameraObject.AddComponent<Camera>();
+                camera.tag = "MainCamera";
+            }
+
+            cameraObject.transform.position = new Vector3(0f, 6f, -8f);
+            ThirdPersonCamera follow = cameraObject.GetComponent<ThirdPersonCamera>();
+            if (follow == null)
+                follow = cameraObject.AddComponent<ThirdPersonCamera>();
             follow.SetTarget(player.transform);
 
             PlayerController controller = player.GetComponent<PlayerController>();
