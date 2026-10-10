@@ -95,12 +95,22 @@ namespace FMAI.Survival.Bootstrap
                 if (!extractionAttempted &&
                     missionManager.IsComplete(MissionId) &&
                     helicopter.CanExtract(player.position) &&
-                    helicopterMission.TryLaunch(player) &&
-                    helicopter.TryCompleteExtraction())
+                    CompleteExtraction())
+
                 {
                     extractionAttempted = true;
                 }
             }
+        }
+
+        private bool CompleteExtraction()
+        {
+            // Keep the pre-teleport position for the helicopter's final range check.
+            Vector3 extractionPosition = player.position;
+            if (!helicopterMission.TryLaunch(player))
+                return false;
+
+            return helicopter.TryCompleteExtraction(extractionPosition);
         }
 
         private void OnGUI()
