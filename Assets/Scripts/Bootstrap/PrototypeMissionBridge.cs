@@ -55,9 +55,7 @@ namespace FMAI.Survival.Bootstrap
 
             GameObject destination = new GameObject("Prototype_Helicopter_Destination");
             destination.transform.position = new Vector3(-8f, 1f, -8f);
-
-            var destinationField = typeof(HelicopterMission).GetField("destination", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic);
-            destinationField?.SetValue(helicopterMission, destination.transform);
+            helicopterMission.SetDestination(destination.transform);
         }
 
         private void Update()
@@ -74,11 +72,17 @@ namespace FMAI.Survival.Bootstrap
                 }
             }
 
-            if (!extractionAttempted && missionManager.IsComplete("mission.signal") && helicopter.CanExtract(player.position))
+            if (!extractionAttempted &&
+                missionManager.IsComplete("mission.signal") &&
+                helicopter.CanExtract(player.position))
             {
-                extractionAttempted = helicopter.TryExtract(player.position);
-                if (extractionAttempted)
-                    helicopterMission.TryLaunch(player);
+                if (helicopterMission.TryLaunch(player))
+                {
+                    if (helicopter.TryCompleteExtraction())
+                    {
+                        extractionAttempted = true;
+                    }
+                }
             }
         }
     }
