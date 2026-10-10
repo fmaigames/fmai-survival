@@ -6,29 +6,42 @@ namespace FMAI.Survival.World
     {
         [SerializeField] private float interactionRadius = 3f;
         [SerializeField] private bool missionReady;
+
         private bool extracted;
+
+        public bool IsExtracted => extracted;
 
         public bool CanExtract(Vector3 playerPosition)
         {
             Vector3 offset = playerPosition - transform.position;
             offset.y = 0f;
-            return !extracted && missionReady && offset.sqrMagnitude <= interactionRadius * interactionRadius;
+
+            return !extracted &&
+                   missionReady &&
+                   offset.sqrMagnitude <=
+                   interactionRadius * interactionRadius;
         }
 
-        public bool TryExtract(Vector3 playerPosition)
+        public bool TryCompleteExtraction()
         {
-            if (!CanExtract(playerPosition)) return false;
+            if (extracted || !missionReady)
+                return false;
+
             extracted = true;
             return true;
         }
 
-        public void SetMissionReady(bool ready) => missionReady = ready;
-
-        public bool IsExtracted => extracted;
+        public void SetMissionReady(bool ready)
+        {
+            missionReady = ready;
+        }
 
         private void OnDrawGizmosSelected()
         {
-            Gizmos.DrawWireSphere(transform.position, interactionRadius);
+            Gizmos.DrawWireSphere(
+                transform.position,
+                interactionRadius
+            );
         }
     }
 }

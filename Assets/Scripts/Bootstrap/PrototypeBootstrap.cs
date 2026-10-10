@@ -77,6 +77,7 @@ namespace FMAI.Survival.Bootstrap
         {
             gameObject.AddComponent<PrototypeSpawner>();
             player.AddComponent<PrototypeCombatSpawner>();
+            gameObject.AddComponent<PrototypeMissionBridge>();
         }
     }
 }
